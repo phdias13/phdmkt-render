@@ -1,0 +1,16 @@
+{
+  "name": "phdmkt-render",
+  "version": "1.0.0",
+  "description": "Render HTML->PNG para o ecossistema PhD!mkt (substitui o HCTI)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "puppeteer": "^23.0.0"
+  }
+}
