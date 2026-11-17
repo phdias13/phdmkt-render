@@ -3,6 +3,13 @@
 Substitui o **HCTI** (R$73/mês → R$0). Roda no Railway que você já tem.
 Endpoint: `POST /render` recebe HTML e devolve PNG. Mesmo papel do HCTI no WF-5.
 
+## Segurança (desde 15/11/2026)
+- Token obrigatório e comparado em tempo constante.
+- A página não acessa a rede fora de `RENDER_ALLOWED_HOSTS` (nem rede interna, nem metadados da nuvem).
+- `POST /render` aceita `html` **ou** `url` (só de host permitido).
+- Tetos: largura 4000, altura 8000, espera 10 s, HTML 4 MB, 4 páginas ao mesmo tempo.
+- Testes: `npm test`.
+
 ## Arquivos
 - `server.js` — API (Express + Puppeteer)
 - `package.json` — dependências
@@ -13,7 +20,8 @@ Endpoint: `POST /render` recebe HTML e devolve PNG. Mesmo papel do HCTI no WF-5.
    - Via GitHub: New repo → suba os 4 arquivos → no Railway: **New Project → Deploy from GitHub repo**.
    - Via CLI: `npm i -g @railway/cli` → `railway login` → dentro da pasta: `railway init` → `railway up`.
 2. No serviço, em **Variables**, defina:
-   - `RENDER_TOKEN` = uma senha forte sua (qualquer string secreta). **Guarde — vai no n8n.**
+   - `RENDER_TOKEN` = uma senha forte sua (qualquer string secreta). **Obrigatório:** sem ela o serviço recusa todo pedido com 503. **Guarde — vai no n8n e no Ecossistema/Firma.**
+   - `RENDER_ALLOWED_HOSTS` = hosts que a página renderizada pode acessar, separados por vírgula. Inclua o domínio do Ecossistema/Firma (ele manda `url` das páginas de carrossel) e o das fontes, por exemplo `ecossistema-hq-production.up.railway.app,fonts.googleapis.com,fonts.gstatic.com`. Qualquer outro endereço é bloqueado (proteção contra SSRF).
 3. O Railway dá uma URL pública (ex.: `https://phdmkt-render-production.up.railway.app`).
 4. Teste a saúde: abra `…/health` → deve responder `{"ok":true,...}`.
 
